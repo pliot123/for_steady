@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<iostream>
+#include<stdlib.h>
+#include<algorithm>
+using namespace std;
+
+
+int main(void)
+{
+	int W,start;
+	cin >> W;
+	start = 1;
+	int sum=0;
+	int cnt = 1;
+	while (1)
+	{
+		sum += start;
+		if (sum > W)
+			break;
+		start++;
+		cnt++;
+	}
+
+	printf("%d", cnt-1);
+}
