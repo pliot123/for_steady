@@ -1,0 +1,35 @@
+#include <string>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+bool solution(vector<string> phone_book) {
+    for (int i = 0; i < phone_book.size(); i++) {
+        string a = phone_book[i];
+        int n = a.size();
+        for (int j = 0; j < phone_book.size(); j++) {
+
+            if (phone_book[j].size() > n&& i!=j && a == phone_book[j].substr(0, n))
+                return false;
+        }
+    }
+    return true;
+}
+
+//이중 포문으로 짜면 시간초과를 피할 수 없다.
+
+
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+bool solution(vector<string> phone_book) {
+    sort(phone_book.begin(), phone_book.end());
+    for(int i=0;i<phone_book.size()-1;i++){
+        if(phone_book[i] == phone_book[i+1].substr(0,phone_book[i].size())) return false;
+    }
+    return true;
+}
+
+//정렬 시켜 놓고 인접한 두개만 비교하면 된다. 솔직히 다른 사람 풀이보고 풀었다.
