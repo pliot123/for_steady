@@ -1,0 +1,53 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+bool comp(pair<int,int> a, pair<int, int> b)
+{
+    return a.first > b.first;//재생횟수 내림차순
+}
+
+bool comp2(pair<string, int> a, pair<string, int> b)
+{
+    return a.second > b.second;
+}
+
+
+
+vector<int> solution(vector<string> genres, vector<int> plays) {
+    vector<int> answer;
+    map<string, int> gen_cnt; //장르별 카운트
+    map<string, vector<pair<int, int>> > gen_id;//장르별 재생 횟수 및 고유넘버
+    vector<pair<string, int>> gen_num; //장르별 갯수
+    int n = 0;
+    for (int i = 0; i < genres.size(); i++)
+    {
+        gen_cnt[genres[i]] += plays[i];
+        gen_id[genres[i]].push_back({ plays[i],i });
+    }
+
+    for (auto& chart : gen_id)
+    {
+        sort(chart.second.begin(), chart.second.end(), comp);
+    }
+
+    gen_num.assign(gen_cnt.begin(), gen_cnt.end());
+
+    sort(gen_num.begin(), gen_num.end(), comp2);
+
+    for (int i = 0; i < gen_num.size(); i++)
+    {
+        string genre_name = gen_num[i].first;
+
+        for (int j = 0; (j < gen_id[genre_name].size() && j < 2); j++)
+        {
+            answer.push_back(gen_id[genre_name][j].second);
+        }
+    }
+
+    return answer;
+}
