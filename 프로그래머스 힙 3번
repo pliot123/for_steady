@@ -1,0 +1,63 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+vector<int> solution(vector<string> operations) {
+    priority_queue<int> pq1;//내림차순
+    priority_queue<int, vector<int>, greater<int>> pq2;//오름차순
+    vector<int> answer;
+    int cnt = 0;
+    int P_cnt = 0;
+    for (int i = 0; i < operations.size(); i++)
+    {
+        string s = operations[i];
+       
+
+        if (s[0] == 'I')
+        {
+            pq1.push(stoi(s.substr(2)));
+            pq2.push(stoi(s.substr(2))); P_cnt++;
+        }
+        else
+        {
+            if (s[2] == '-')//최솟값 삭제
+            {
+                if (!pq2.empty())
+                {
+                    pq2.pop(); cnt++;
+                }
+            }
+            else if (s[2] == '1')
+            {
+                if (!pq1.empty())
+                {
+                    pq1.pop(); cnt++;
+                }
+            }
+        }
+
+        if (cnt >= P_cnt)
+        {
+            while (!pq1.empty())
+                pq1.pop();
+            while (!pq2.empty())
+                pq2.pop();
+            cnt = 0; P_cnt = 0;
+        }
+    }
+    if (pq1.empty())
+    {
+        answer.push_back(0);
+        answer.push_back(0);
+    }
+    else
+    {
+        answer.push_back(pq1.top());
+        answer.push_back(pq2.top());
+    }
+        return answer;
+}
+
