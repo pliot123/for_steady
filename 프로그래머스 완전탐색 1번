@@ -1,0 +1,79 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+
+using namespace std;
+
+
+bool cmp(int a, int b)
+{
+    if (a > b)
+        return a;
+}
+
+vector<int> solution(vector<int> answers) {
+    vector<int> answer;
+
+    int p1_cnt = 0;
+    int p2_cnt = 0;
+    int p3_cnt = 0;
+    vector<int> p1 = { 1, 2, 3, 4, 5 };
+    vector<int> p2 = { 2, 1, 2, 3, 2, 4, 2, 5 };
+    vector<int> p3 = { 3, 3, 1, 1, 2, 2, 4, 4, 5, 5 };
+    int idx1 = 0;
+    int idx2 = 0;
+    int idx3 = 0;
+    for (int i = 0; i < answers.size(); i++)
+    {
+        if (idx1 > 4)
+            idx1 = 0;
+
+        if (idx2 > 7)
+            idx2 = 0;
+
+        if (idx3 > 9)
+            idx3 = 0;
+
+        if (p1[idx1] == answers[i])
+            p1_cnt++;
+
+        if (p2[idx2] == answers[i])
+            p2_cnt++;
+
+        if (p3[idx3] == answers[i])
+            p3_cnt++;
+
+        idx1++;
+        idx2++;
+        idx3++;
+    }
+    vector<int> b;
+    b.push_back(p1_cnt);
+    b.push_back(p2_cnt);
+    b.push_back(p3_cnt);
+    
+    int max = *max_element(b.begin(), b.end());
+
+    int k = 1;
+    for (int i = 0; i < 3; i++)
+    {
+        if (b[i] == max)
+        {
+            answer.push_back(k);
+        }
+        k++;
+    }
+
+    
+    return answer;
+}
+
+int main()
+{
+
+    vector<int> a = { 1,2,3,4,5 };
+    solution(a);
+    return 0;
+}
