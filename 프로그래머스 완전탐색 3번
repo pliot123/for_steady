@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+vector<int> solution(int brown, int yellow) {
+    vector<int> answer;
+    int length = 2;// yellow세로 
+    int width = yellow;// yellow가로
+
+    // yellow 타일으 만드는 조합식을 뽑아내기
+    vector<pair<int, int>> v;
+    v.push_back(make_pair(1, yellow));
+
+    while (length < width)
+    {
+        int k = 0;
+        if (yellow % length == 0)
+        {
+            k = yellow / length;
+            v.push_back(make_pair(length, k));
+            length++;
+            width = k;
+        }
+        else
+        {
+            length++;
+        }
+    }
+    
+    for (int i = 0; i < v.size(); i++)
+    {
+        int k = 0, s = 0;// 카로 세로
+        k += v[i].second + 2;
+        s += v[i].first + 2;
+        if ((k * s) == (brown+yellow))
+        {
+            answer.push_back(k);
+            answer.push_back(s);
+            break;
+        }
+    }
+
+
+
+
+    return answer;
+}
+//노란색을 완성시킬 수 있는 가로세로 조합을 구한다음 
+// 조합의 1번부터 가로 세로 +2 씩해서 곱한 것이 전체블럭의 개수와 같다면 break 하고 벡터에 넣어주면 끝.
