@@ -1,0 +1,52 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int solution(int n, vector<int> lost, vector<int> reserve) {
+    int answer = n;
+    sort(lost.begin(), lost.end());
+    sort(reserve.begin(), reserve.end());
+
+    answer -= lost.size();
+
+    for (int i = 0; i < lost.size(); i++)
+    {
+        for (int j = 0; j < reserve.size(); j++)
+        {
+            for(int k=0;k<lost.size();k++)
+            {
+                if (reserve[j] == lost[k])
+                {
+                    answer++; lost[k] = 12345; reserve[j] = 5555; j++;
+                    break;
+                }
+            }
+
+            if (reserve[j] - 1 == lost[i])
+            {
+                answer++; lost[i] = 12345; reserve[j] = 5555;
+                break;
+            }
+            if (reserve[j] + 1 == lost[i])
+            {
+                answer++; lost[i] = 12345; reserve[j] = 5555;
+                break;
+            }
+
+        }
+    }
+    return answer;
+}
+int main(void)
+{
+    //5, [2, 5, 6], [2, 4, 6]
+    int n = 8;
+    vector<int> lost = {1,2,3,4,5};
+    vector<int> reserve = { 1,2,3,4,5 };
+    solution(n, lost, reserve);
+
+    return 0;
+}
