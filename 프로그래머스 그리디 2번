@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string name) {
+    int answer = 0;
+    int i =0 ;
+    string temp(name.length(),'A');
+    
+    while(1)
+    {
+        temp[i]=name[i];
+        
+        name[i]-'A'> 'Z'+1-name[i] ? answer+= 'Z'+1-name[i] : answer +=name[i]-'A';
+        
+        if(temp==name)
+            break;
+        
+        for(int move =1; move<name.length();move++)
+        {
+            //오른 쪽이 더 가까울 때
+            if(name[(i+move) % name.length()] !=temp[(i+move) % name.length()])
+            {
+                i = (i+move) % name.length(); answer +=move;break;
+            }
+            else if(name[(i+name.length()-move) %name.length() ] != temp[(i+name.length()-move) %name.length()])//왼쪽으로 가는게 더 가까울 때
+            {
+                i = (i+name.length()-move) %name.length(); answer +=move;break;
+            }   
+        }
+    }
+    return answer;
+}
+
+//처음 문제를 보고 너무 막막해서,, 다른 사람의 코드를 참조했다. ㅎㅎ양심에 찔린다.
+//https://mungto.tistory.com/44
+//여기서 보고왔다. 로직만 보고 안보고 다시 쳤는데 본의아니게 코드가 완전 똑같다. 
+//많이 배워갑니다... 삼항연산자, 문제에 대한 접근 법 
