@@ -1,0 +1,36 @@
+#include <string>
+#include <vector>
+#include<queue>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+int solution(vector<int> people, int limit) {
+    priority_queue<int, vector<int>, greater<int>> min;
+    priority_queue<int> max;
+    int answer = 0;
+    for (int i = 0; i < people.size(); i++)
+    {
+        max.push(people[i]);
+        min.push(people[i]);
+    }
+    int t = people.size();
+    while (t>=1)
+    {
+
+        if (max.top() + min.top() <= limit)
+        {
+
+            max.pop(); min.pop();
+            t -= 2; answer++;
+        }
+        else
+        {
+            max.pop();
+            t--; answer++;
+        }
+    }
+
+    return answer;
+}
+//pq를 이용해서 풀었다.
