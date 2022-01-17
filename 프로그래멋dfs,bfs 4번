@@ -1,0 +1,32 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+bool check[10001] = {false, };
+vector<string> answer={"ICN"};
+
+int max_count;
+void dfs(string words, vector<vector<string>> tickets,int cnt){
+    if(max_count <cnt)
+    {
+        max_count =cnt;
+        answer.push_back(words);
+    
+    }
+        
+    for(int i=0; i<tickets.size();i++){
+        if(words==tickets[i][0] && check[i]==false){
+            
+            check[i]=true;
+            dfs(tickets[i][1],tickets,cnt+1);
+            check[i]=false;
+        }
+    }
+}
+
+vector<string> solution(vector<vector<string>> tickets) {
+    sort(tickets.begin(), tickets.end());
+    dfs("ICN",tickets,0);
+
+    return answer;
+} 내 코드인데 자꾸 틀리단다... 뭐가 틀린건지 나로서는 이해할수 없다..
