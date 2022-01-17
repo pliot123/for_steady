@@ -1,0 +1,46 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+
+int solve(vector<int> v ,int n, int m, int k)
+{
+	int answer = 1;
+	int max = *max_element(v.begin(), v.end());
+	int second_max=v[0];
+	int temp = 0;
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (v[i] < max && second_max <= v[i])
+			second_max = v[i];
+	}
+	//cout << " 두번째 큰 값 " << second_max;
+	int original = k;
+	for (int i = 0; i < m; i++)
+	{
+		
+		if (k > 0) {
+			answer += max;
+			//cout << " 나"<< max;
+			k--;
+		}
+		else
+		{
+			answer += second_max;
+			k = original;
+			//cout << second_max;
+		}
+	}
+	return answer-1;
+}
+
+int main(void)
+{
+	int n = 5, m = 8, k = 3;
+	vector<int> v = { 2,4,5,4,6 };
+	cout << solve(v,n,m,k);
+}
+
+알고리즘을 제대로 공부하기위해서 책을 샀다. 그 중 첫번째 문제이다.
