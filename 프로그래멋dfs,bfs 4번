@@ -30,3 +30,38 @@ vector<string> solution(vector<vector<string>> tickets) {
 
     return answer;
 } 내 코드인데 자꾸 틀리단다... 뭐가 틀린건지 나로서는 이해할수 없다..
+
+
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+bool check[10001] = {false, };
+vector<string> answer={"ICN"};
+
+int max_count;
+void dfs(string words, vector<vector<string>> tickets,int cnt){
+    if(max_count <cnt)
+    {
+        max_count =cnt;
+        answer.push_back(words);
+    
+    }
+        
+    for(int i=0; i<tickets.size();i++){
+        if(words==tickets[i][0] && check[i]==false){
+            
+            check[i]=true;
+            dfs(tickets[i][1],tickets,cnt+1);
+            check[i]=false;
+        }
+    }
+}
+
+vector<string> solution(vector<vector<string>> tickets) {
+    sort(tickets.begin(), tickets.end());
+    dfs("ICN",tickets,0);
+
+    return answer;
+} 이건 내코드에 종료조건을 다른 사람꺼 훔쳐온 코드다.. 훔쳐왔으니 아무도 보지마,,,
+https://eunchanee.tistory.com/93 여기서 훔쳐왔다
