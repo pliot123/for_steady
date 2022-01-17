@@ -1,0 +1,33 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+
+int solve(int n, int m)
+{
+	int answer = 0;
+	while (1)
+	{
+		if(n ==1 )break;
+		if (n % m == 0)
+		{
+			n /= m;
+			answer++;
+		}
+		else
+		{
+			n--;
+			answer++;
+		}
+	}
+	return answer;
+}
+
+int main(void)
+{
+	cout << solve(25,5);
+}
+
+//이런 문제를 올려도 될지 모르겠다..
