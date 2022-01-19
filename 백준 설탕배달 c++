@@ -1,0 +1,41 @@
+ #include<iostream> 
+ using namespace std;
+ int big = 5, sm = 3;
+          
+      
+ int solve(int n) { 
+      
+
+            if (n < sm) { return -1; }
+            int big2 = n / big;
+            for (big2; big2 >= 0; big2--) {
+      
+                int temp = n - (big2 * big); 
+      
+                if (temp % sm == 0) {
+      
+                    return big2 + (temp / sm);
+      
+                } 
+      
+            } 
+      
+            return -1; 
+      
+        } 
+      
+          
+      
+ void main() { 
+      
+            int n = 0; 
+      
+            cin >> n; 
+      
+            int result = solve(n); 
+      
+            cout << result << endl; 
+      
+            return ; 
+        } 
+      
