@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	long long n;
+	cin >> n; 
+	long long sum=0; 
+	int result = 0;
+	int idx = 1;
+	while (1) {
+		sum += idx;
+		result++;
+
+		if (n < sum)
+		{
+			result--;
+			break;
+		}
+		idx++;
+	}
+	cout << result;
+	return 0;
+}
+
+예전에 못푼 문제에 있길래 풀어서 올렸다!
