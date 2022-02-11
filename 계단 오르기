@@ -16,5 +16,5 @@ int main() {
     for (int i = 4; i <= N; i++)
         DP[i] = max(DP[i - 2],DP[i - 3] + arr[i - 1]) + arr[i];
 
-    cout << max(DP[N]);
+    cout <<DP[N];
 }
