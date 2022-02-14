@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int N;
+int DP[1001];
+int arr[1001] = { 0, };
+
+int main() {
+    cin >> N;
+    int max = 0;
+    for (int i = 1; i <= N; i++)
+        cin >> arr[i];
+
+    for (int i = 1; i <= N; ++i) {
+        for (int j = 0; j <= i; ++j) {
+            if(arr[i]>arr[j] && DP[j]+1 > DP[i])
+            DP[i] = DP[j] + 1;
+        }
+        if (max < DP[i]) {
+            max = DP[i];
+        }
+    }
+
+    cout << max;
+    return 0;
+}
+백준 최장 부분증가수열을 구하는 문제이다. DP라는 배열에 하나씩 증가시키면서 값을 더해주어야한다.
+항상0번째 인덱스는 dp도 0,arr[0]도 0으로 두고 이중포문으로 dp의 값을 하나씩 비교해보고 증가시킨다.
