@@ -1,0 +1,26 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int T,n,m;
+	cin >> T ;	
+	for (int t = 0; t < T; t++) {
+		cin >> n >> m;
+		int dp[31][31] = { 0 };
+		for (int i = 1; i <=m; i++) {
+			dp[1][i] = i;
+		}
+		for (int i = 2; i <= n; i++) {
+			for (int j = i; j <= m; j++) {
+				for (int k = j-1; k >=1; k--) {
+					dp[i][j] += dp[i - 1][k];
+				}
+			}
+		}
+		cout << dp[n][m] << endl;
+	}
+	return 0;
+}
+
+실버 5인데 생각보다 어려웠다 ..ㅎ
