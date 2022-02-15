@@ -1,0 +1,66 @@
+https://programmers.co.kr/learn/courses/30/lessons/42576
+문제 설명
+수많은 마라톤 선수들이 마라톤에 참여하였습니다. 단 한 명의 선수를 제외하고는 모든 선수가 마라톤을 완주하였습니다.
+
+마라톤에 참여한 선수들의 이름이 담긴 배열 participant와 완주한 선수들의 이름이 담긴 배열 completion이 주어질 때, 완주하지 못한 선수의 이름을 return 하도록 solution 함수를 작성해주세요.
+
+제한사항
+마라톤 경기에 참여한 선수의 수는 1명 이상 100,000명 이하입니다.
+completion의 길이는 participant의 길이보다 1 작습니다.
+참가자의 이름은 1개 이상 20개 이하의 알파벳 소문자로 이루어져 있습니다.
+참가자 중에는 동명이인이 있을 수 있습니다.
+입출력 예
+participant	completion	return
+["leo", "kiki", "eden"]	["eden", "kiki"]	"leo"
+["marina", "josipa", "nikola", "vinko", "filipa"]	["josipa", "filipa", "marina", "nikola"]	"vinko"
+["mislav", "stanko", "mislav", "ana"]	["stanko", "ana", "mislav"]	"mislav"
+입출력 예 설명
+예제 #1
+"leo"는 참여자 명단에는 있지만, 완주자 명단에는 없기 때문에 완주하지 못했습니다.
+
+예제 #2
+"vinko"는 참여자 명단에는 있지만, 완주자 명단에는 없기 때문에 완주하지 못했습니다.
+
+예제 #3
+"mislav"는 참여자 명단에는 두 명이 있지만, 완주자 명단에는 한 명밖에 없기 때문에 한명은 완주하지 못했습니다.
+
+*completion의 길이는 participant의 길이보다 1 작습니다. 단 한명만 완주 못한다는 말이다.
+그럼 우선순위큐 2개에 문자열 백터 2개를 넣으면 자동으로 알파벳순서대로 정렬되고 
+하나씩 비교하면서 참가자와 완주자가 다르면 참가 배열에 있는 사람을 리턴하면 된다.
+
+코드
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+string solution(vector<string> participant, vector<string> completion) {
+    string answer = "";
+    priority_queue <string> pq1;
+    priority_queue <string> pq2;
+    for(int i = 0 ; i < participant.size();i++){
+        pq1.push(participant[i]);
+    }
+    
+    for(int i = 0 ; i < completion.size();i++){
+        pq2.push(completion[i]);
+    }
+    while(1){
+        
+        string a =pq1.top();
+        
+        if(pq2.empty())
+            return a;
+        
+        string b =pq2.top();
+        if(a!=b)
+        {
+            answer =a;
+            break;
+        }
+        pq1.pop();pq2.pop();
+        
+    }
+    return answer;
+}
