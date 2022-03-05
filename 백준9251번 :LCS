@@ -1,0 +1,62 @@
+최장 공통 부분 수열을 구하는 문제이다.
+
+LCS 성공
+
+ 
+시간 제한메모리 제한제출정답맞힌 사람정답 비율
+1 초	256 MB	47287	19263	14116	40.437%
+문제
+LCS(Longest Common Subsequence, 최장 공통 부분 수열)문제는 두 수열이 주어졌을 때, 모두의 부분 수열이 되는 수열 중 가장 긴 것을 찾는 문제이다.
+
+예를 들어, ACAYKP와 CAPCAK의 LCS는 ACAK가 된다.
+
+입력
+첫째 줄과 둘째 줄에 두 문자열이 주어진다. 문자열은 알파벳 대문자로만 이루어져 있으며, 최대 1000글자로 이루어져 있다.
+
+출력
+첫째 줄에 입력으로 주어진 두 문자열의 LCS의 길이를 출력한다.
+
+예제 입력 1 복사
+ACAYKP
+CAPCAK
+예제 출력 1 복사
+4
+출처
+문제를 만든 사람: baekjoon
+데이터를 추가한 사람: bang627, eric00513, qpwoeiruty
+알고리즘 분류
+다이나믹 프로그래밍
+
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int arr[1001][1001];
+
+int main(){
+    
+  string s1,s2;
+  cin >>s1 >> s2;
+  
+  int a =s1.length();
+  int b =s2.length();
+  for(int i = 1; i<=a;i++){
+      for(int j= 1; j<=b;j++){
+        if(s1[i-1]==s2[j-1])
+            arr[i][j]= arr[i-1][j-1]+1;
+        else
+            arr[i][j]=max(arr[i-1][j],arr[i][j-1]);
+      }
+  }  
+
+  cout <<arr[a][b]<<endl;
+  return 0;
+}
+
+코드는 이렇게 짜면 된다.
+
+
+
