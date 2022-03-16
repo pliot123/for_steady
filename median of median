@@ -1,0 +1,138 @@
+
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 100
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#pragma warning(disable : 4996)
+int n;//원소의 갯수
+
+int cnt;
+void partition2(int low, int high, int* S, int& pivotpoint);
+int selecting(int n, int* S, int k);
+int selection2(int* S, int low, int high, int k);
+int median(int first, int last, int* S);
+bool desc(int a, int b) {
+    return a > b;
+}
+int main()
+{
+    int t, k;
+
+    cin >> n;
+
+    int* S = (int*)malloc(sizeof(int) * (n + 1));
+    int* input = (int*)malloc(sizeof(int) * (n + 1));
+    for (int i = 1; i <= n; i++) {
+        cin >> input[i];
+    }
+
+    cin >> t;
+    for (int i = 1; i <= t; i++) {
+        cin >> k;
+        cnt = 0;
+        for (int i = 1; i <= n; i++)
+            S[i] = input[i];
+        int answer = selecting(n, S, k);
+        printf("%d %d\n", answer, cnt);
+        //cout << answer << " " << cnt << endl;
+    }
+}
+/*  8
+  12 10 5 15 18 11 4 16
+  8
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8*/
+
+
+int median(int first, int last, int* S)
+{
+    int S_temp[MAX];
+    for (int i = 1; i <= n; i++)
+        S_temp[i] = S[i];
+    int temp;
+    for (int i = first; i < last; i++) {
+        for (int j = first; j < last; j++) {
+            if (S_temp[j] > S_temp[j + 1]) {
+                temp = S_temp[j];
+                S_temp[j] = S_temp[j + 1];
+                S_temp[j + 1] = temp;
+            }
+        }
+    }
+    int size = first + last - 1;
+
+    if (size % 2 == 0)
+        return S_temp[((size) / 2)];
+    else
+        return S_temp[((size) / 2 + 1)];
+}
+
+
+int selecting(int n, int* S, int k)
+{
+    return selection2(S, 1, n, k);
+}
+
+int selection2(int* S, int low, int high, int k)
+{
+    int  pivotpoint;
+
+    if (low == high)
+        return S[low];
+    else {
+        partition2(low, high, S, pivotpoint);
+        if (k == pivotpoint)
+            return S[pivotpoint];
+        else if (k < pivotpoint)
+            return selection2(S, low, pivotpoint - 1, k);
+        else
+            return selection2(S, pivotpoint + 1, high, k);
+    }
+}
+
+void partition2(int low, int high, int* S, int& pivotpoint)
+{
+    cnt++;
+    int arraysize = high - low + 1;
+    int pivotitem;
+
+    int r = (int)ceil((double)arraysize / 5);// 어레이 사이즈 5로 나눈값
+    int mark = 0;
+    int first, last, j;
+
+    int* T = (int*)malloc(sizeof(int) * (r + 1));
+    for (int i = 1; i <= r; i++) {
+        first = low + (5 * i) - 5;
+        last = min(low + 5 * i - 1, low + arraysize - 1);
+        T[i] = median(first, last, S);
+        /*cout << "r값은 -> " << r << endl;   */
+    }
+    //15 12 8 5 3 2 30 13 10 7 1 22 18 15 14 6
+    pivotitem = selecting(r, T, (r + 1) / 2);
+    j = low;
+    for (int i = low; i <= high; i++) {
+        if (S[i] == pivotitem) {
+            int t = S[i]; S[i] = S[j]; S[j] = t;
+            mark = j++;
+        }
+        else if (S[i ] < pivotitem) {
+            int t = S[i]; S[i] = S[j]; S[j] = t;
+            j++;
+        }
+    }
+    pivotpoint = j - 1;
+    int t = S[mark]; S[mark] = S[pivotpoint]; S[pivotpoint] = t;
+}
+알고리즘 수업시간에 풀어본 문제였는데 다시한번 꺼내와봤다..
