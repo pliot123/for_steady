@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <iostream>
+#include <string.h>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+#pragma warning(disable : 4996)
+typedef struct item* item_pointer;
+typedef struct item {
+    int weight;
+    int profit;
+    float unit_profit;
+}itemtype;
+
+#define MAX 256
+int n;
+int W;
+int maxprofit;
+int totalweight;
+float global_bound;
+float global_bound2;
+int p[MAX];
+int w[MAX];
+
+bool desc(item a, item b)
+{
+    return a.unit_profit > b.unit_profit;
+}
+
+bool promising(int i, int profit, int weight) {
+    int j, k, totweight = 0;
+    float bound;
+    if (weight >= W)
+        return false; // 담은 것들이 가방의 무게를 넘어섰을 때 nonpromising
+    else {// promising할떄
+        j = i + 1;
+        bound = profit;
+        totweight = weight;
+        while (j <= n && totweight + w[j] <= W) {
+            totweight += w[j];
+            bound += p[j];
+            j++;
+        }
+        k = j;
+        if (k <= n)
+        {
+            bound += (W - totweight) * (p[k] / w[k]);
+        }
+
+        return bound > maxprofit;
+    }
+}
+
+float bound(int i,int profit, int weight) {
+    int j, k, totweight; float result;
+    if (weight >= W)
+        return 0;
+    else {
+        result = profit;
+        j = i + 1;
+        totweight = weight;
+        while (j <= n && totweight + w[j] <= W) {
+            totweight += w[j];
+            result += p[j];
+            j++;
+        }
+        k = j;
+        if (k <= n)
+            result += (W - totweight) * ((float)p[k] / w[k]);
+        return result;
+    }
+}
+
+
+void knapsack4(int i, int profit, int weight) {
+    if (weight <= W && profit > maxprofit) { // 현재 배낭 무게가 담을 수 있는 배낭의 총량 W보다 작거나 같으면서 , 현재 이익이 최고의 이익보다 커졌을 때 
+        maxprofit = profit;
+        totalweight = weight;
+        global_bound2 = bound(i,profit,weight);
+    }
+    if (promising(i, profit, weight)) {
+        knapsack4(i + 1, profit + p[i + 1], weight + w[i + 1]);// 하나 더 포함 시키겠다는 말
+        knapsack4(i + 1, profit, weight);// 포함 시키지 않고 가겠다는 말
+    }
+}
+
+int main()
+{
+    int weight, profit;
+    int sum_weight = 0;
+    int min_weight = 10;
+    itemtype item[MAX];
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> weight;
+        w[i] = weight;
+        if (min_weight > w[i])
+            min_weight = w[i];
+        sum_weight += weight;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> profit;
+        p[i] = profit;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        item[i].weight = w[i];
+        item[i].profit = p[i];
+        item[i].unit_profit = (float)p[i] / (float)w[i];
+    }
+    sort(item + 1, item + n + 1, desc);
+
+    for (int i = 1; i <= n; i++)
+    {
+        w[i] = item[i].weight;
+        p[i] = item[i].profit;
+    }
+
+    int test, a;
+    cin >> test;
+
+    for (int i = 1; i <= test; i++)
+    {
+        totalweight = 0;
+        maxprofit = 0;
+        cin >> W;
+        knapsack4(0, 0, 0);
+
+		if (global_bound2 == 0)
+			cout << maxprofit << ' ' << totalweight << ' ' << maxprofit << endl;
+        else
+			cout << maxprofit << ' ' << totalweight << ' ' << global_bound2 << endl;
+        
+        
+    }
+}
