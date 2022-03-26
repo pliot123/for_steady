@@ -1,0 +1,135 @@
+문제
+상근이는 문자열에 폭발 문자열을 심어 놓았다. 폭발 문자열이 폭발하면 그 문자는 문자열에서 사라지며, 남은 문자열은 합쳐지게 된다.
+
+폭발은 다음과 같은 과정으로 진행된다.
+
+문자열이 폭발 문자열을 포함하고 있는 경우에, 모든 폭발 문자열이 폭발하게 된다. 남은 문자열을 순서대로 이어 붙여 새로운 문자열을 만든다.
+새로 생긴 문자열에 폭발 문자열이 포함되어 있을 수도 있다.
+폭발은 폭발 문자열이 문자열에 없을 때까지 계속된다.
+상근이는 모든 폭발이 끝난 후에 어떤 문자열이 남는지 구해보려고 한다. 남아있는 문자가 없는 경우가 있다. 이때는 "FRULA"를 출력한다.
+
+폭발 문자열은 같은 문자를 두 개 이상 포함하지 않는다.
+
+입력
+첫째 줄에 문자열이 주어진다. 문자열의 길이는 1보다 크거나 같고, 1,000,000보다 작거나 같다.
+
+둘째 줄에 폭발 문자열이 주어진다. 길이는 1보다 크거나 같고, 36보다 작거나 같다.
+
+두 문자열은 모두 알파벳 소문자와 대문자, 숫자 0, 1, ..., 9로만 이루어져 있다.
+
+출력
+첫째 줄에 모든 폭발이 끝난 후 남은 문자열을 출력한다.
+
+예제 입력 1 복사
+mirkovC4nizCC44
+C4
+예제 출력 1 복사
+mirkovniz
+예제 입력 2 복사
+12ab112ab2ab
+12ab
+
+음 단순한 방식으로는 시간초과를 피할 수가 없다.
+
+시간초과 코드
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int n;
+string s;
+string boom;
+
+
+
+int main()
+{
+cin >> s >> boom;
+
+int boom_size = boom.size();
+int s_size = s.size();
+int cnt = 0;
+while (1) {
+cnt = 0;
+bool check = false;
+string temp;
+for (int i = 0; i < s_size; i++) {
+if (s.substr(i, boom_size) == boom) {
+i += boom_size - 1;
+check = true;
+cnt++;
+}
+else {
+temp += s[i];
+}
+}
+s_size -= cnt * boom_size;
+s = temp;
+if (check == false)
+break;//트루면 멈추게하라.
+}
+if (!s.empty()) {
+cout << s;
+}
+else {
+cout << "FRULA";
+}
+
+return 0;
+}
+
+스택 문자열인 만큼 스택을 활용한 방식으로 다시 작성해온다.
+
+음
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+
+int main(){
+string s;
+string boom;
+string answer; 
+cin >> s >> boom;
+int s_size = s.length();
+int b_size = boom.length();
+
+int idx = -1;
+
+for (int i = 0; i < s_size; i++) {
+answer += s[i];
+idx++;
+if (answer[idx] == boom[b_size - 1]) {
+bool check = false;
+int k = 0;
+
+for (int j = idx; j > idx - b_size; j--) {// i가 맨 끝점, j는 i에 대입시켜주고 i-2를 하면 두칸을 빼주게되면 j를 
+if (answer[idx-k] != boom[b_size - 1 - k]) {
+check = true;
+}
+k++;
+}
+
+if (check == false) {
+
+for (int d = 0; d < b_size; d++) {
+answer.pop_back();
+idx--;
+}
+}
+}
+}
+if (!answer.empty())
+cout << answer;
+else
+cout << "FRULA";
+return 0;
+}
+
+답답해서 문자열말고 내가 폭발할 뻔했다.
+
+문자열 다루는 건 어려워 근데
+
+해볼만하다 .
