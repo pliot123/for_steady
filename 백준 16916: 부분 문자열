@@ -1,0 +1,106 @@
+백준 16916: 부분 문자열
+카테고리 없음 2022. 3. 28. 17:49
+수정 | 비공개로 변경합니다 | 삭제
+부분 문자열 성공
+ 
+
+ 
+시간 제한메모리 제한제출정답맞힌 사람정답 비율
+1 초	512 MB	8514	2622	1912	36.371%
+문제
+문자열 S의 부분 문자열이란, 문자열의 연속된 일부를 의미한다.
+
+예를 들어, "aek", "joo", "ekj"는 "baekjoon"의 부분 문자열이고, "bak", "p", "oone"는 부분 문자열이 아니다.
+
+문자열 S와 P가 주어졌을 때, P가 S의 부분 문자열인지 아닌지 알아보자.
+
+입력
+첫째 줄에 문자열 S, 둘째 줄에 문자열 P가 주어진다. 두 문자열은 빈 문자열이 아니며, 길이는 100만을 넘지 않는다. 또, 알파벳 소문자로만 이루어져 있다.
+
+출력
+P가 S의 부분 문자열이면 1, 아니면 0을 출력한다.
+
+예제 입력 1 복사
+baekjoon
+aek
+예제 출력 1 복사
+1
+예제 입력 2 복사
+baekjoon
+bak
+예제 출력 2 복사
+0
+예제 입력 3 복사
+baekjoon
+joo
+예제 출력 3 복사
+1
+예제 입력 4 복사
+baekjoon
+oone
+예제 출력 4 복사
+0
+예제 입력 5 복사
+baekjoon
+online
+예제 출력 5 복사
+0
+예제 입력 6 복사
+baekjoon
+baekjoon
+예제 출력 6 복사
+1
+출처
+ 
+
+이 알고리즘은 KMP로 해결하는 것인데, 코테를 준비하는 나로써 KMP를 외우고 있을 시간이 없다. 
+
+그리고 문자열 매치는 O(n)으로 끊어야하는데, KMP알고리즘이 O(n)이지만 라빈카프알고리즘 역사 (n)에다가 결정적으로 이해하기도 구현하기도 쉽다.그래서 라빈-카프알고리즘으로 풀어보았따. 코드는 동빈나 센세의 코드를 참고했따.
+
+#include <iostream>
+
+using namespace std;
+string S, P;
+
+void findString() {
+int S_size = S.size();
+int P_size = P.size();
+
+int wsHash = 0;
+int psHash = 0;
+int power = 1; 
+
+for (int i = 0; i <= S_size - P_size; i++) {
+if (i == 0) {
+for (int j = 0; j < P_size; j++) {
+wsHash += S[P_size - 1 - j] * power;
+psHash += P[P_size - 1 - j] * power;
+if (j < P_size - 1) power *= 3;
+}
+}
+else {
+wsHash = 3 * (wsHash - S[i - 1] * power) + S[P_size - 1 + i];
+}
+if (wsHash == psHash) {
+bool isFind = true;
+// 우연히 해시값이 겹친 경우 위해 문자열 일치 여부 검사
+for (int j = 0; j < P_size; j++) {
+if (S[i + j] != P[j]) {
+isFind = false;
+break;
+}
+}
+if (isFind) {
+cout << 1;
+exit(0);
+}
+}
+}
+cout << 0;
+exit(0);
+}
+int main() {
+
+cin >> S >> P;
+findString();
+}
