@@ -1,0 +1,309 @@
+캐슬 디펜스 성공
+
+ 
+시간 제한메모리 제한제출정답맞힌 사람정답 비율
+1 초	512 MB	21148	7507	4430	30.986%
+문제
+캐슬 디펜스는 성을 향해 몰려오는 적을 잡는 턴 방식의 게임이다. 게임이 진행되는 곳은 크기가 N×M인 격자판으로 나타낼 수 있다. 격자판은 1×1 크기의 칸으로 나누어져 있고, 각 칸에 포함된 적의 수는 최대 하나이다. 격자판의 N번행의 바로 아래(N+1번 행)의 모든 칸에는 성이 있다.
+
+성을 적에게서 지키기 위해 궁수 3명을 배치하려고 한다. 궁수는 성이 있는 칸에 배치할 수 있고, 하나의 칸에는 최대 1명의 궁수만 있을 수 있다. 각각의 턴마다 궁수는 적 하나를 공격할 수 있고, 모든 궁수는 동시에 공격한다. 궁수가 공격하는 적은 거리가 D이하인 적 중에서 가장 가까운 적이고, 그러한 적이 여럿일 경우에는 가장 왼쪽에 있는 적을 공격한다. 같은 적이 여러 궁수에게 공격당할 수 있다. 공격받은 적은 게임에서 제외된다. 궁수의 공격이 끝나면, 적이 이동한다. 적은 아래로 한 칸 이동하며, 성이 있는 칸으로 이동한 경우에는 게임에서 제외된다. 모든 적이 격자판에서 제외되면 게임이 끝난다. 
+
+게임 설명에서 보다시피 궁수를 배치한 이후의 게임 진행은 정해져있다. 따라서, 이 게임은 궁수의 위치가 중요하다. 격자판의 상태가 주어졌을 때, 궁수의 공격으로 제거할 수 있는 적의 최대 수를 계산해보자.
+
+격자판의 두 위치 (r1, c1), (r2, c2)의 거리는 |r1-r2| + |c1-c2|이다.
+
+입력
+첫째 줄에 격자판 행의 수 N, 열의 수 M, 궁수의 공격 거리 제한 D가 주어진다. 둘째 줄부터 N개의 줄에는 격자판의 상태가 주어진다. 0은 빈 칸, 1은 적이 있는 칸이다.
+
+출력
+첫째 줄에 궁수의 공격으로 제거할 수 있는 적의 최대 수를 출력한다.
+
+제한
+3 ≤ N, M ≤ 15
+1 ≤ D ≤ 10
+예제 입력 1 복사
+5 5 1
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+1 1 1 1 1
+예제 출력 1 복사
+3
+예제 입력 2 복사
+5 5 1
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+1 1 1 1 1
+0 0 0 0 0
+예제 출력 2 복사
+3
+예제 입력 3 복사
+5 5 2
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+1 1 1 1 1
+0 0 0 0 0
+예제 출력 3 복사
+5
+예제 입력 4 복사
+5 5 5
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+예제 출력 4 복사
+15
+예제 입력 5 복사
+6 5 1
+1 0 1 0 1
+0 1 0 1 0
+1 1 0 0 0
+0 0 0 1 1
+1 1 0 1 1
+0 0 1 0 0
+예제 출력 5 복사
+9
+예제 입력 6 복사
+6 5 2
+1 0 1 0 1
+0 1 0 1 0
+1 1 0 0 0
+0 0 0 1 1
+1 1 0 1 1
+0 0 1 0 0
+예제 출력 6 복사
+14
+출처
+
+
+캐슬 디펜스
+첫째 줄에 격자판 행의 수 N, 열의 수 M, 궁수의 공격 거리 제한 D가 주어진다. 둘째 줄부터 N개의 줄에는 격자판의 상태가 주어진다. 0은 빈 칸, 1은 적이 있는 칸이다.
+궁수를 3개를 어케 놓는가 + 궁수의 사정거리는 어떻게 되는가를 잘 조합해서
+코드를 짜면 될 것 같다.
+두 위치의 거리는 유클리디안 거리로 구한다.
+모든 적이 제외될 때 까지 기다려야한다.
+게임이 한판이 진행되고 궁수 위치를 dfs로 완탐하면서 여러 게임을 진행 시켜본 뒤 최대 몇명의 병사를 죽일 수 있는 지를 찾으면 될 것 같다.
+
+시작해보자. 
+
+일단 궁수가 활을 쏘는 거 부터
+구현해보자.dfs로 한칸씩 이동해서 
+최단 거리를 찾아서 쏘면 되나? 시간초과가 뜰꺼같은 불안함은 뭐지?
+아니면 발사할 수 있는 거리의 범주를 계산해놓고 그중에 맨 왼쪽 제일 가까운 적을 쏠 것인가?
+
+
+범위안에 적을 dfs 돌려서 리스트로 뽑고 리스트를 거리 기준, 왼쪽 기준으로 정렬한 다음 젤 앞에 있는 놈을 뽑아서 삭제한 뒤 벡터를 클리어시킨다.
+아니면 bfs?
+bfs로 돌리면 거리를 증가시키면서 계산이 가능하니까 적이면 bfs돌리는 와중에 리스트에 끼워넣는 건 어떨까?
+111
+111
+  x
+
+#include <iostream>
+#include<queue>
+#include<algorithm>
+#include<vector>
+using namespace std;
+int N, M,D;
+int answer = 987654321;
+int dy[4] = { 1,0,0 };
+int dx[4] = { 0,1,-1};
+bool visited[16][16];
+int Map[16][16];
+int farthest;
+int qwe = 0;
+int dlc = 0;
+vector<pair<int, int>> enemy;
+vector<pair<int, int>> archer;
+
+bool cmp(pair<pair<int, int>, int> a, pair<pair<int, int>, int> b) {
+if (a.second != b.second)
+return a.second < b.second;
+else if (a.second == b.second)
+return a.first.second < b.first.second;
+//거리 기준으로 오름차순정렬하고 거리가 같으면 x값이 작은 순서(왼쪽에 있는 순서대로 정렬을 한다.
+//근데 이것도 제대로 돌아가는 지 모름 확인해봐야한다.
+}
+void soothing(int y,int x) {
+
+queue<pair<int, int>> q;
+vector<pair<pair<int, int>, int>> v;
+q.push({ y,x });
+while (!q.empty()) {
+int y = q.front().first;
+int x = q.front().second;
+q.pop();
+if (Map[y][x] > D)continue;
+for (int i = 0; i < 3; i++) {
+int ny = y + dy[i];
+int nx = x + dx[i];
+if (ny > N - 1 || ny<0 || nx >M - 1 || nx < 0)continue;
+if (Map[ny][nx] == 0 || Map[ny][nx]==1) {
+if (Map[ny][nx] == 0) {
+Map[ny][nx] = Map[y][x] + 1;
+q.push({ ny,nx });
+}
+else if (Map[ny][nx] == 1) {
+q.push({ ny,nx });
+v.push_back({ {ny,nx},Map[ny][nx] });
+}
+}
+}
+}
+sort(v.begin(), v.end(), cmp);
+enemy.push_back({ v[0].first.first,v[0].first.second });
+}
+
+void game(int y ,int x, int cnt) {
+if (cnt == 3) {
+for (int i = 0; i < archer.size(); i++) {
+int a = archer[i].first;
+int b = archer[i].second;
+soothing(a, b);
+}
+for (int i = 0; i < enemy.size(); i++) {
+int a = enemy[i].first;
+int b = enemy[i].second;
+if (Map[a][b] == 1) {
+Map[a][b] = 0;
+dlc++;//삭제한 횟수 카운트
+}
+}
+enemy.clear();
+
+return;
+}
+
+}
+
+
+int main() {
+cin >> N >> M >> D;
+
+for (int i = 0; i < N; i++)
+for (int j = 0; j < M; j++) {
+cin >> Map[i][j];
+if (Map[i][j] == 1)
+qwe++;
+}
+
+return 0;
+} 이방식으로 풀었는데 도저히 구현할게 너무 많아져서 코드가 200줄이 넘어버리겠다. 깔쌈하게 포기하고
+
+https://cocoon1787.tistory.com/431
+참조하겠읍니다..
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+using namespace std;
+
+int N, M, D;
+int map[17][17];
+int dx[3] = { -1,0,1 };
+int dy[3] = { 0,-1,0 };
+int ans;
+queue<pair<int, int>> q;
+
+void simulation(int x, int y, int z)
+{
+int map_copy[17][17];
+bool check[16][16];
+bool visit[16][16];
+int archer[3] = { x,y,z }; // 현재 궁수 위치 (x축 좌표)
+int pos = N + 1; // 현재 궁수 위치 (y축 좌표)
+int kill = 0;
+
+// 맵 복사 및 체크 표시 초기화
+for (int i = 1; i <= N; i++)
+for (int j = 1; j <= M; j++)
+{
+map_copy[i][j] = map[i][j];
+check[i][j] = false;
+}
+
+
+while (pos > 1)
+{
+for (int i = 0; i < 3; i++) // 궁수 3명
+{
+// 방문 여부 초기화
+for (int j = 1; j <= N; j++)
+for (int k = 1; k <= M; k++)
+visit[j][k] = false;
+
+q = queue<pair<int, int>>(); // 큐 초기화
+int init_x = archer[i];
+int init_y = pos - 1;
+
+q.push({ init_x, init_y });
+
+// 적 탐색
+while (!q.empty())
+{
+int now_x = q.front().first;
+int now_y = q.front().second;
+q.pop();
+
+visit[now_y][now_x] = true; // 방문 표시
+
+if (map_copy[now_y][now_x] == 1) // 적 발견시
+{
+check[now_y][now_x] = true; // 공격 표시
+break;
+}
+
+for (int j = 0; j < 3; j++) // 좌,상,우 순으로 탐색
+{
+int next_x = now_x + dx[j];
+int next_y = now_y + dy[j];
+if (next_x >= 1 && next_x <= M && next_y >= 1 && next_y <= N) // 갈려는 곳이 맵 범위에서 벗어나지 않고 
+if ((abs(archer[i] - next_x) + abs(pos - next_y) <= D)) // 궁수 사정거리 내에 있으며
+if (!visit[next_y][next_x]) // 방문한 적이 없을 때
+q.push({ next_x, next_y });
+
+}
+}
+
+}
+
+// 공격 표시된 적들 제거
+for (int i = 1; i <= N; i++)
+for (int j = 1; j <= M; j++)
+if (check[i][j])
+map_copy[i][j] = 0;
+
+
+pos--; // 궁수들 한칸 위로 이동
+}
+
+// 공격당한 적들 카운트
+for (int i = 1; i <= N; i++)
+for (int j = 1; j <= M; j++)
+if (check[i][j]) kill++;
+
+ans = max(ans, kill);
+}
+
+int main(void)
+{
+cin >> N >> M >> D;
+
+// 맵 입력
+for (int i = 1; i <= N; i++)
+for (int j = 1; j <= M; j++)
+cin >> map[i][j];
+
+// 궁수 배치 시뮬레이션
+for (int i = 1; i <= M; i++)
+for (int j = i + 1; j <= M; j++)
+for (int k = j + 1; k <= M; k++)
+simulation(i, j, k);
+
+cout << ans << '\n';
+}
+짧지만 강력한 코드,,, 짜신분이 되게 똑똑한 것 같다. 그 분의 지식의 결정체를 차마 손도 댈 수 없기에 주석하나 고치지않고 그대로 가져왔다. 혹시 문제가 되면 삭제하겠습니다.
