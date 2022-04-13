@@ -1,0 +1,81 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+struct Fish {
+	int x, y, dir;
+	bool state;
+};
+int dx[9] = { 0,-1,-1,0,1,1,1,0,-1 };
+int dy[9] = { 0,0,-1,-1,-1,0,1,1,1 };
+int answer = 0;
+int Map[4][4];
+Fish fishs[17];
+
+void visited(int x, int y, int num, bool t) {
+	if (t == true) {//상어가 여기 있다, 그리고 상어가 떠난 자리는 빈칸으로 만들어줘야한다
+		Map[x][y] = -1;
+		fishs[Map[x][y]].state = false;
+	}
+	else {// 상어가 오지 않은 것처럼 만들어야한다.
+		Map[x][y] = num;
+		fishs[Map[x][y]].state = true;
+	}
+}
+
+void FishMove() {
+	for (int i = 1; i <= 16; i++) {
+
+	}
+}
+
+void dfs(int x, int y, int dir, int sum) {
+	
+	answer = max(answer, sum);
+	int temp_M[4][4];
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			temp_M[i][j] = Map[i][j];
+	Fish temp_f[17];
+	for (int i = 1; i <= 16; i++)
+		temp_f[i] = fishs[i];
+	//물고기 이동
+
+	for (int i = 1; i <= 3; i++) {
+		int nx = x + dx[dir] * i;
+		int ny = y + dy[dir] * i;
+		if (nx < 0 || ny < 0 || nx>4 || ny >4)continue;
+		if (fishs[Map[nx][ny]].state == false)continue;
+		int num = Map[nx][ny];
+		visited(nx, ny, num, true);
+		dfs(nx, ny, fishs[Map[nx][ny]].dir, Map[nx][ny]);
+		visited(nx, ny, num, false);
+	}
+
+
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			Map[i][j]= temp_M[i][j];
+	for (int i = 1; i <= 16; i++)
+		fishs[i]= temp_f[i];
+	//dfs구조상 맨 밑칸까지갔다가 다시 원점으로 돌아올텐데 그럼 원점으로 가면서 
+	//계속 그 이전의 Map이 있어야함
+
+
+}
+int main() {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			int a, b;
+			cin >> a >> b;
+			Map[i][j] = a;
+			fishs[a].x = i, fishs[a].y = j, fishs[a].dir = b, fishs[a].state = true;
+		}
+	}
+	Map[0][0] = -1;//상어표시
+	fishs[Map[0][0]].state = false;//물고기 사망
+	dfs(0,0,fishs[Map[0][0]].dir, Map[0][0]);
+	cout << answer;
+	return 0;
+}
+//코드를 짜는 중인데, 12시 전으로 못짤꺼같아서 미리 잔디를 꾸욱,,,
