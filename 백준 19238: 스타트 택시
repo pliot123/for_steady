@@ -1,0 +1,140 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+int Map[21][21];
+int N, M, K;//맵크기, 목표고객 수 , 연료량
+int a, b;
+int dy[4] = { -1,1,0,0 };
+int dx[4] = { 0,0,-1,1 };
+vector<pair<pair<int, int>, pair<int, int>>> v;
+struct info {
+	int y1, x1, y2, x2;
+};
+info people[422];
+bool cmp(pair<int, pair<int, int>> a , pair<int, pair<int, int>> b) {
+	if (a.first != b.first) {//행 비교
+		return a.first < b.first;
+	}
+	else if (a.first == b.first && a.second.first != b.second.first) {
+		return a.second.first < b.second.first;
+	}
+	else {
+		return a.second.second < b.second.second;
+	}
+}
+
+void go_destination(int r, int c) {
+	int DstY=0, DstX=0;
+	for (int i = 0; i < M; i++) {
+		if (people[i].y1 == r && people[i].x1 == c) {
+			DstY = people[i].y2, DstX = people[i].x2;
+		}
+	}
+	int temp[21][21];
+	memset(temp, 0, sizeof(temp));
+	queue<pair<int, int>>q;
+	q.push({ r,c });
+	while (!q.empty()) {
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+	
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dy[i];
+			int nx = x + dx[i];
+			if (ny <1 || nx<1 || ny>N || nx > N)continue;
+			if (Map[ny][nx] == 1)continue;
+			if (temp[ny][nx] == 0) {
+				temp[ny][nx] = temp[y][x] + 1;
+				q.push({ ny,nx });
+			}
+			
+			if (ny == DstY && nx == DstX) {
+				//cout << "현재 잔량" << K << endl;
+				K -= temp[ny][nx];
+				//cout << "도착한 뒤 잔량" << K << endl;
+				if (K < 0) {
+					K = -1;
+					return;
+				}
+				K += 2*temp[ny][nx];
+				//cout << "충전량" << 2 * temp[ny][nx]  << "현재 K량"<< K << endl;
+				a = ny, b = nx;
+				return;
+			}
+		}
+	}
+	K = -1;
+}
+
+void Find_people() {
+	int temp[21][21];
+	memset(temp, 0, sizeof(temp));
+	if (Map[a][b] == 2) {
+		Map[a][b] == 0;
+		go_destination(a,b);
+	}
+	queue<pair<int, int>>q;
+	vector<pair<int,pair<int, int>>>v;
+
+	q.push({ a, b });
+	while (!q.empty()) {
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dy[i];
+			int nx = x + dx[i];
+			if (ny <1 || nx<1 || ny>N || nx > N)continue;
+			if (Map[ny][nx] == 1)continue;
+			if (temp[ny][nx] == 0) {
+				temp[ny][nx] = temp[y][x]+1;
+				q.push({ ny,nx });
+			}
+			if (Map[ny][nx] == 2) {
+				v.push_back({ temp[ny][nx],{ny,nx} });
+			}
+		}
+	}
+	if (!v.empty()) {
+		sort(v.begin(), v.end(), cmp);
+		K -= v[0].first;
+		//cout << "손님 태우러 가는 동안 따른 양" << K << endl;
+
+		if (K <= 0) {
+			K=-1;
+			return;
+		}
+		Map[v[0].second.first][v[0].second.second] = 0;
+		go_destination(v[0].second.first, v[0].second.second);
+		return;
+	}
+	K = -1;
+
+}
+void simul() {
+	for (int i = 0; i < M; i++)
+		Find_people();
+
+}
+
+int main() {
+	cin >> N >> M >> K;
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= N; j++)
+			cin >> Map[i][j];
+	cin >> a >> b;
+	for (int i = 0; i < M; i++) {
+		cin >> people[i].y1 >> people[i].x1 >> people[i].y2 >> people[i].x2;
+		int y=people[i].y1, x = people[i].x1;
+		Map[y][x] = 2;
+	}
+	simul();
+	cout << K;
+	return 0;
+}
+아직 미완성 문제이다.. ㅠ_ㅠ 고려사항이 너무많다 ㅠ
