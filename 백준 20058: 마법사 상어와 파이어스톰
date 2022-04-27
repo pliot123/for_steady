@@ -1,0 +1,263 @@
+마법사 상어와 파이어스톰 성공
+
+ 
+시간 제한메모리 제한제출정답맞힌 사람정답 비율
+1 초	512 MB	7187	3084	1871	39.464%
+문제
+마법사 상어는 파이어볼과 토네이도를 조합해 파이어스톰을 시전할 수 있다. 오늘은 파이어스톰을 크기가 2N × 2N인 격자로 나누어진 얼음판에서 연습하려고 한다. 위치 (r, c)는 격자의 r행 c열을 의미하고, A[r][c]는 (r, c)에 있는 얼음의 양을 의미한다. A[r][c]가 0인 경우 얼음이 없는 것이다.
+
+파이어스톰을 시전하려면 시전할 때마다 단계 L을 결정해야 한다. 파이어스톰은 먼저 격자를 2L × 2L 크기의 부분 격자로 나눈다. 그 후, 모든 부분 격자를 시계 방향으로 90도 회전시킨다. 이후 얼음이 있는 칸 3개 또는 그 이상과 인접해있지 않은 칸은 얼음의 양이 1 줄어든다. (r, c)와 인접한 칸은 (r-1, c), (r+1, c), (r, c-1), (r, c+1)이다. 아래 그림의 칸에 적힌 정수는 칸을 구분하기 위해 적은 정수이다.
+
+
+
+
+마법을 시전하기 전	L = 1	L = 2
+마법사 상어는 파이어스톰을 총 Q번 시전하려고 한다. 모든 파이어스톰을 시전한 후, 다음 2가지를 구해보자.
+
+남아있는 얼음 A[r][c]의 합
+남아있는 얼음 중 가장 큰 덩어리가 차지하는 칸의 개수
+얼음이 있는 칸이 얼음이 있는 칸과 인접해 있으면, 두 칸을 연결되어 있다고 한다. 덩어리는 연결된 칸의 집합이다.
+
+입력
+첫째 줄에 N과 Q가 주어진다. 둘째 줄부터 2N개의 줄에는 격자의 각 칸에 있는 얼음의 양이 주어진다. r번째 줄에서 c번째 주어지는 정수는 A[r][c] 이다.
+
+마지막 줄에는 마법사 상어가 시전한 단계 L1, L2, ..., LQ가 순서대로 주어진다.
+
+출력
+첫째 줄에 남아있는 얼음 A[r][c]의 합을 출력하고, 둘째 줄에 가장 큰 덩어리가 차지하는 칸의 개수를 출력한다. 단, 덩어리가 없으면 0을 출력한다.
+
+제한
+2 ≤ N ≤ 6
+1 ≤ Q ≤ 1,000
+0 ≤ A[r][c] ≤ 100
+0 ≤ Li ≤ N
+예제 입력 1 복사
+3 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1
+예제 출력 1 복사
+284
+64
+예제 입력 2 복사
+3 2
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2
+예제 출력 2 복사
+280
+64
+예제 입력 3 복사
+3 5
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 0 3 2
+예제 출력 3 복사
+268
+64
+예제 입력 4 복사
+3 10
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 0 3 2 1 2 3 2 3
+예제 출력 4 복사
+248
+62
+예제 입력 5 복사
+3 10
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8
+8 7 6 5 4 3 2 1
+1 2 3 1 2 3 1 2 3 1
+예제 출력 5 복사
+246
+60
+예제 입력 6 복사
+3 10
+1 0 3 4 5 6 7 0
+8 0 6 5 4 3 2 1
+1 2 0 4 5 6 7 0
+8 7 6 5 4 3 2 1
+1 2 3 4 0 6 7 0
+8 7 0 5 4 3 2 1
+1 2 3 4 5 6 7 0
+0 7 0 5 4 3 2 1
+1 2 3 1 2 3 1 2 3 1
+예제 출력 6 복사
+37
+9
+
+
+배열을 나눠서 돌리면 된다 
+시계방향으로 90도 돌려놓고
+얼음의 주변 조건에 맞게 낮춰가면 된다..
+낮추는거는 쉬울꺼같은데,
+얼음돌리는게 약간 어려운거 같다
+
+y x
+0,0 인덱스는 돌려하는 사이즈가 2이면
+4X4사이즈에서 돌려한다
+-> 이 방향으로 하나씩 받아서
+아래방향으로 하나씩 뿌려주면 된다
+
+가장 큰 덩어리를 구하는 것은 dfs나 bfs를 사용해주면 되는데 나는 dfs를 이용했다.
+
+
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int N, Q;// Q는 시전 횟수
+int Map[65][65];
+bool visited[65][65];
+int dy[4] = { 0, 0, -1, 1 };
+int dx[4] = { -1,1,0,0 };
+int n = 2;
+int answer;
+int Max;
+vector<int> L;
+void roll(int y,int x, int size) {
+	        //0     2        2
+	vector<int> temp;
+	for(int i = y; i<y+size;i++)
+		for (int j = x; j <x+ size; j++) {
+			temp.push_back(Map[i][j]);
+			//cout << Map[i][j];
+		}
+	int cnt = 0;
+	for(int j=x+size-1; j>=(x + size - 1)-(size-1);j--)
+		for (int i = y; i <= y + size - 1; i++) {
+				Map[i][j] = temp[cnt];
+				cnt++;
+		}
+}
+int cnt = 0;
+void firestorm(int size, int n) {
+	int cize = 2;
+	if (size == 0)cize = 1;
+	for (int i = 1; i < size; i++)
+		cize *= 2;
+	for (int i = 0; i < n; i += cize)
+		for (int j = 0; j < n; j += cize)
+			roll(i, j, cize);
+	/*cout <<++cnt<< "번째 회전이다" << endl << endl;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << Map[i][j] << ' ';
+		}cout << endl;
+	}*/
+
+
+
+	vector<pair<int, int>> vvs;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			int cnt = 0;
+			for (int k = 0; k < 4; k++) {
+				int ny = i + dy[k];
+				int nx = j + dx[k];
+				if (ny<0 || ny> n - 1 || nx < 0 || nx > n - 1)continue;
+				if (Map[ny][nx] > 0)cnt++;
+			}
+			if (cnt < 3)
+			{
+				vvs.push_back({ i,j });
+			}
+		}
+	}
+	for (int i = 0; i < vvs.size(); i++)
+		Map[vvs[i].first][vvs[i].second] -= 1;
+
+
+	//cout << cnt << "번째 회전에서 뺄꺼 빼준 뒤" << endl << endl;
+	//for (int i = 0; i < n; i++) {
+	//	for (int j = 0; j < n; j++) {
+	//		cout << Map[i][j] << ' ';
+	//	}cout << endl;
+	//}
+
+	//cout << '끝' << endl;
+}
+void dfs(int y, int x) {
+	Max++;
+	answer = max(answer, Max);
+
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+		if (ny<0 || ny> n - 1 || nx < 0 || nx > n - 1)continue;
+		if (visited[ny][nx] == false && Map[ny][nx]>0) {
+			visited[ny][nx] = true;
+			dfs(ny, nx);
+		}
+	}
+}
+
+int main() {
+	cin >> N >> Q;
+	
+	for (int i = 0; i < N-1; i++)
+		n *= 2;
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			cin >> Map[i][j];
+
+	for (int i = 0; i < Q; i++) {
+		int input;
+		cin >> input;
+		L.push_back(input);
+	}
+
+	for (int i = 0; i < Q; i++) {
+		firestorm(L[i], n);
+	}
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (Map[i][j] > 0)
+				sum += Map[i][j];
+			if (visited[i][j] == false && Map[i][j] > 0)
+			{
+				visited[i][j] = true;
+				dfs(i, j);
+				Max = 0;
+			}
+		}
+	}
+	cout << sum << '\n' << answer << '\n';
+
+	return 0;
+}
+
+
