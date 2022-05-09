@@ -1,0 +1,204 @@
+이렇게 코드를 짰는데, 출력결과는 맞지만 한칸씩 돌려서 시간초과 오류가 떴다! R칸씩 돌려야한다는 말인 거같은데,,
+
+R이 10^9승까지 커질 수 있다. 
+
+문제를 잘 읽어야한다.
+
+ 
+
+#include <string>
+#include<iostream>
+using namespace std;
+int N, M, R;
+int Map[300][300];
+
+void roll() {
+	int Copy[300][300];
+	
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			Copy[i][j] = Map[i][j];
+
+	int x1=0, x2 = M-1;//가로축 길이
+	int y1=0, y2 = N-1;//세로축 길이
+	//0 3 
+	//1 2
+	//2 1
+	while (x2 > x1 && y2 > y1) {
+
+		for (int i = x2; i >= x1; i--) {
+			if (i == x1)
+				Map[y1 + 1][i] = Copy[y1][i];
+			else
+				Map[y1][i - 1] = Copy[y1][i];
+		}
+		/*cout << endl << "위" << endl;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				cout << Map[i][j] << ' ';
+			}cout << '\n';
+		}*/
+		for (int i = y1; i <= y2; i++) {
+			if (i == y2)
+				Map[i][x1 + 1] = Copy[i][x1];
+			else
+				Map[i + 1][x1] = Copy[i][x1];
+		}
+		/*cout << endl << "왼쪽" << endl;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				cout << Map[i][j] << ' ';
+			}cout << '\n';
+		}*/
+
+		for (int i = x1; i <= x2; i++) {
+			if (i == x2)
+				Map[y2 - 1][i] = Copy[y2][i];
+			else
+				Map[y2][i + 1] = Copy[y2][i];
+		}
+
+		/*cout << endl << "아래" << endl;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				cout << Map[i][j] << ' ';
+			}cout << '\n';
+		}*/
+
+		for (int i = y2; i >= y1; i--) {
+			if (i == y1)
+				Map[i][x2 - 1] = Copy[i][x2];
+			else
+				Map[i-1][x2] = Copy[i][x2];
+		}
+
+		/*cout << endl << "오른쪽" << endl;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				cout << Map[i][j] << ' ';
+			}cout << '\n';
+		}*/
+
+		x1++, x2--, y1++, y2--;
+	}
+	
+}
+
+int main() {
+	cin >> N >> M >> R;
+	
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> Map[i][j];
+
+	for (int i = 0; i < R; i++)
+		roll();
+	
+	//cout << "최종 결과" << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cout << Map[i][j] << ' ';
+		}cout << '\n';
+	}
+
+	return 0;
+}
+ 
+
+이렇게 짰는데 자꾸 오류가 뜬다.. 왜틀렸는지 모가 틀렸는지 당최 모르겠따.. 미안하다.. 혹여나 이 글을 읽는 사람들에게 죄송한 마음이 든다..
+
+ 
+
+#include <iostream>
+
+using namespace std;
+
+int n, m, r;
+
+int mat[301][301];
+
+
+void print() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << mat[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void solution() {
+
+    // 꼭지점 4개  
+    int y1 = 0;
+    int x1 = 0;
+
+    int y2 = n - 1;
+    int x2 = 0;
+
+    int y3 = n - 1;
+    int x3 = m - 1;
+
+    int y4 = 0;
+    int x4 = m - 1;
+
+    // 가장 바깥 영역부터 안으로 들어가기  
+    while ((y1 < y2) && (x1 < x4)) {
+
+        // 영역 내에서 의미있게 회전할 횟수 구하기 
+        int move = r % ((y2 - y1) * 2 + (x4 - x1) * 2);
+
+        while (move--) {
+            // 회전 시키기 
+            int tmp = mat[y1][x1];
+            // 위쪽 변  
+            for (int j = x1; j < x4; j++) {
+                mat[y1][j] = mat[y1][j + 1];
+            }
+
+            for (int i = y4; i < y3; i++) {
+                mat[i][x4] = mat[i + 1][x4];
+            }
+
+            for (int j = x3; j > x2; j--) {
+                mat[y3][j] = mat[y3][j - 1];
+            }
+
+            for (int i = y2; i > y1; i--) {
+                mat[i][x2] = mat[i - 1][x2];
+            }
+
+            mat[y1 + 1][x1] = tmp;
+        }
+
+        // 회전이 끝났으면, 영역 옮기기  
+        y1 += 1;
+        x1 += 1;
+
+        y2 -= 1;
+        x2 += 1;
+
+        y3 -= 1;
+        x3 -= 1;
+
+        y4 += 1;
+        x4 -= 1;
+    }
+
+    print();
+}
+
+
+int main(void) {
+
+    cin >> n >> m >> r;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> mat[i][j];
+        }
+    }
+
+    solution();
+}
+ 이 코드는 나랑 비슷한 로직으로 짠 사람 코드인데 인터넷에서 찾아왔따. ..ㅠ
