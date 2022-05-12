@@ -1,0 +1,68 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+int V, E;//정점 간선
+int parent[10001];
+
+bool check;
+struct info {
+	int x, y, weight;
+};
+bool cmp(info a, info b) {
+	return a.weight < b.weight;
+}
+int find_parent(int x) {
+	if (parent[x] == x)//자기 자신이 부모다 그러면 종료
+		return x;
+	return parent[x] = find_parent(parent[x]);//아니면 재귀적으로 부모를 끝까지 찾아감
+}
+void union_parent(int x, int y) {
+	check = false;
+	x = find_parent(x);
+	y = find_parent(y);
+	if (x == y)return;
+	parent[y] = x;
+	check = true;
+}
+bool check_same(int a, int b) {
+	a = find_parent(a);
+	b = find_parent(b);
+	if (a == b) return true;
+	else return false;
+}
+
+
+int main() {
+	cin >> V >> E;
+	vector<info> graph;
+	for (int i = 1; i <= V; i++)
+		parent[i] = i;
+
+	for (int i = 0; i < E; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		info temp;
+		temp.x = a, temp.y = b, temp.weight = c;
+		graph.push_back(temp);
+	}
+
+	sort(graph.begin(), graph.end(), cmp);
+	//가중치작은 순서부터 정렬
+	int sum = 0;
+
+	for (int i = 0; i < E; i++) {
+		int x = graph[i].x;
+		int y = graph[i].y;
+		int weight = graph[i].weight;
+
+		union_parent(x, y);
+		if (check)
+			sum += weight;
+
+
+	}
+
+	cout << sum << endl;
+	return 0;
+}
