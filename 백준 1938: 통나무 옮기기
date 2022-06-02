@@ -1,0 +1,527 @@
+통나무 옮기기 성공
+ 
+
+ 
+시간 제한메모리 제한제출정답맞힌 사람정답 비율
+2 초	128 MB	7454	2371	1718	30.369%
+문제
+가로와 세로의 길이가 같은 평지에서 벌목을 한다. 그 지형은 0과 1로 나타나 있다. 1은 아직 잘려지지 않은 나무를 나타내고 0은 아무 것도 없음을 나타낸다. 다음 지형을 보자.
+
+B 0 0 1 1
+B 0 0 0 0
+B 0 0 0 0
+1 1 0 0 0
+E E E 0 0
+위의 지형에서 길이 3인 통나무 BBB를 밀거나 회전시켜 EEE의 위치로 옮기는 작업을 하는 문제를 생각해 보자. BBB와 EEE의 위치는 임의로 주어진다. 단 문제에서 통나무의 길이는 항상 3이며 B의 개수와 E의 개수는 같다. 통나무를 움직이는 방법은 아래와 같이 상하좌우(Up, Down, Left, Right)와 회전(Turn)이 있다.
+
+코드의미
+U	통나무를 위로 한 칸 옮긴다.
+D	통나무를 아래로 한 칸 옮긴다.
+L	통나무를 왼쪽으로 한 칸 옮긴다.
+R	통나무를 오른쪽으로 한 칸 옮긴다.
+T	중심점을 중심으로 90도 회전시킨다.
+예를 들면, 다음과 같다. (초기상태로부터의 이동)
+
+초기상태상(U)하(D)좌(L)우(R)회전(T)
+ 	 	 	 	 	 
+이와 같은 방식으로 이동시킬 때에 그 움직일 위치에 다른 나무, 즉 1이 없어야만 움직일 수 있다. 그리고 움직임은 위의 그림과 같이 한 번에 한 칸씩만 움직인다. 단 움직이는 통나무는 어떤 경우이든지 중간단계에서 한 행이나 한 열에만 놓일 수 있다. 예를 들면 아래 그림에서 a와 같은 단계는 불가능하다. 그리고 회전의 경우에서는 반드시 중심점을 중심으로 90도 회전을 해야 한다. (항상 통나무의 길이가 3이므로 중심점이 있음)
+
+그리고 이런 회전(Turn)이 가능하기 위해서는 그 통나무를 둘러싸고 있는 3*3 정사각형의 구역에 단 한 그루의 나무도 없어야만 한다. 즉, 아래그림 b, d와 같이 ?로 표시된 지역에 다른 나무, 즉 1이 없어야만 회전시킬 수 있다. 따라서 c와 같은 경우에, 통나무는 왼쪽 아직 벌채되지 않은 나무 때문에 회전시킬 수 없다.
+
+abcd
+ 	 	 	 
+문제는 통나무를 5개의 기본동작(U, D, L, R, T)만을 사용하여 처음위치(BBB)에서 최종위치(EEE)로 옮기는 프로그램을 작성하는 것이다. 단, 최소 횟수의 단위 동작을 사용해야 한다.
+
+입력
+첫째 줄에 주어진 평지의 한 변의 길이 N이 주어진다. (4 ≤ N ≤ 50) 주어진다. 이어서 그 지형의 정보가 0, 1, B, E로 이루어진 문자열로 주어진다. 한 줄에 입력되는 문자열의 길이는 N이며 입력 문자 사이에는 빈칸이 없다. 통나무와 최종 위치의 개수는 1개이다.
+
+출력
+첫째 줄에 최소 동작 횟수를 출력한다. 이동이 불가능하면 0만을 출력한다.
+
+예제 입력 1 복사
+5
+B0011
+B0000
+B0000
+11000
+EEE00
+예제 출력 1 복사
+9
+예제 입력 2 복사
+4
+B000
+B01E
+B00E
+000E
+예제 출력 2 복사
+0
+출처
+Olympiad > 한국정보올림피아드 > KOI 1998 > 고등부 2번
+
+데이터를 추가한 사람: djm03178, xotjd183
+문제의 오타를 찾은 사람: doju
+빠진 조건을 찾은 사람: doo9012
+알고리즘 분류
+구현
+그래프 이론
+그래프 탐색
+너비 우선 탐색
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<queue>
+#include<vector>
+using namespace std;
+struct info {
+    int y, x, dir;
+};
+int dx[8] = { -1,0,1,1,1,0,-1,-1 };
+int dy[8] = { -1,-1,-1,0,1,1,1,0 };
+int n;
+char Map[51][51];
+bool visited[51][51][2];
+int ny, nx;
+vector<pair<int, int>> B;
+vector<pair<int, int>> E;
+info Ecenter;
+int answer = 0;
+bool check(int y, int x, int dir) {
+    if (Ecenter.y == y && Ecenter.x == x && Ecenter.dir == dir)return true;
+    return false;
+};
+
+bool move(int y, int x, int dir, char mode) {
+    if (dir == 0) {//가로
+        if (mode == 'U') {
+            if (y - 1 < 0)return false;
+            if (Map[y - 1][x - 1] != '1' && Map[y - 1][x] != '1' && Map[y - 1][x + 1] != '1') {
+                ny = y - 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'D') {
+            if (y + 1 >= n)return false;
+            if (Map[y + 1][x - 1] != '1' && Map[y + 1][x] != '1' && Map[y + 1][x + 1] != '1') {
+                ny = y + 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'L') {
+            if (x - 2 < 0)return false;
+            if (Map[y][x - 2] != '1') {
+                ny = y, nx = x - 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'R') {
+            if (x + 2>= n)return false;
+            if (Map[y][x + 2] != '1') {
+                ny = y, nx = x + 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'T') {
+            for (int i = 0; i < 8; i++) {
+                int nr = y + dy[i];
+                int nc = x + dx[i];
+                if (nr<0 || nr>=n || nc<0 || nc>=n || Map[nr][nc] != '0')return false;
+            }
+            return true;
+            
+        }
+    }
+    else if (dir == 1) {//세로일때
+        if (mode == 'U') {
+            if (y - 2 < 0)return false;
+            if (Map[y - 2][x] != '1') {
+                ny = y - 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'D') {
+            if (y + 2 > n-1)return false;
+            if (Map[y + 2][x] != '1') {
+                ny = y + 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'L') {
+            if (x - 1 < 0)return false;
+            if (Map[y - 1][x - 1] != '1' && Map[y][x - 1] != '1' && Map[y + 1][x - 1] != '1') {
+                ny = y, nx = x - 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'R') {
+            if (x + 1 > n - 1)return false;
+            if (Map[y - 1][x + 1] != '1' && Map[y][x + 1] != '1' && Map[y + 1][x + 1] != '1') {
+                ny = y, nx = x + 1;
+                return true;
+                
+            }
+        }
+        
+        else if (mode == 'T') {
+            for (int i = 0; i < 8; i++) {
+                int nr = y + dy[i];
+                int nc = x + dx[i];
+                if (nr<0 || nr>=n || nc<0 || nc>=n || Map[nr][nc] == '1')return false;
+            }
+            return true;
+           
+        }
+    }
+    return false;
+}
+
+void bfs() {
+    info temp;
+    if (B[0].first - B[2].first == 0) {//y축이 가로라는 말
+        temp.dir = 0;//가로는 0으로 표시
+    }
+    else {//y축이 다르면 세로라는 말
+        temp.dir = 1;//세로는 1로 표시
+    }
+    temp.y = B[1].first, temp.x = B[1].second;
+    queue<info> q;
+    q.push(temp);
+    int round = 0;
+    while (!q.empty()) {
+
+        int size = q.size();
+        for (int i = 0; i < size; i++) {
+            int y = q.front().y,
+                x = q.front().x,
+                dir = q.front().dir;
+            q.pop();
+            visited[y][x][dir] = true;
+            if (check(y, x, dir)) {
+                answer = round;
+                return;
+            }
+
+            if (move(y, x, dir, 'U')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+            }
+            if (move(y, x, dir, 'D')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+            }
+            if (move(y, x, dir, 'L')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }    
+            }
+            if (move(y, x, dir, 'R')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+            }
+            if (move(y, x, dir, 'T')) {
+                if (dir == 0) {
+                    if (visited[y][x][1] == false) {
+                        visited[y][x][1] = true;
+                        q.push({ y,x,1 });
+                    }
+                }
+                else if (dir == 1) {
+                    if (visited[y][x][0] == false) {
+                        visited[y][x][0] = true;
+                        q.push({ y,x,0 });
+                    }
+                }
+            }
+        }
+        round++;
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> Map[i][j];
+            if (Map[i][j] == 'B') {
+                B.push_back({ i,j });
+                Map[i][j] = '0';
+            }
+            if (Map[i][j] == 'E') {
+                E.push_back({ i,j });
+                Map[i][j] = '0';
+            }
+        }
+    }
+    if (E[0].first - E[2].first == 0) {
+        Ecenter.dir = 0;
+    }
+    else {
+        Ecenter.dir = 1;
+    }
+    Ecenter.y = E[1].first, Ecenter.x = E[1].second;
+    bfs();
+    
+    cout << answer;
+    return 0;
+}
+어렵게 풀었다 ㅠㅠ 2차원 2개를 사용해서 체크할려니까 자꾸 값이 이상하게 떠서 찾아내기 어려웠따.
+
+로직은 라운드를 증가시키면서 이동시킬수 있는 곳은 다 bfs로 옮겨서 체크하면 된다
+
+통나무는 3개다 쓰지않고 중간 중심축과 가로인지 세로인지 방향만 잡고 옮겨주면 된다.
+
+ 
+
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<queue>
+#include<vector>
+using namespace std;
+struct info {
+    int y, x, dir;
+};
+int dx[8] = { -1,0,1,1,1,0,-1,-1 };
+int dy[8] = { -1,-1,-1,0,1,1,1,0 };
+int n;
+char Map[51][51];
+bool visited[51][51][2];
+int ny, nx;
+vector<pair<int, int>> B;
+vector<pair<int, int>> E;
+info Ecenter;
+int answer = 0;
+bool check(int y, int x, int dir) {
+    if (Ecenter.y == y && Ecenter.x == x && Ecenter.dir == dir)return true;
+    return false;
+};
+
+bool move(int y, int x, int dir, char mode) {
+    if (dir == 0) {//가로
+        if (mode == 'U') {
+            if (y - 1 < 0)return false;
+            if (Map[y - 1][x - 1] != '1' && Map[y - 1][x] != '1' && Map[y - 1][x + 1] != '1') {
+                ny = y - 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'D') {
+            if (y + 1 >= n)return false;
+            if (Map[y + 1][x - 1] != '1' && Map[y + 1][x] != '1' && Map[y + 1][x + 1] != '1') {
+                ny = y + 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'L') {
+            if (x - 2 < 0)return false;
+            if (Map[y][x - 2] != '1') {
+                ny = y, nx = x - 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'R') {
+            if (x + 2>= n)return false;
+            if (Map[y][x + 2] != '1') {
+                ny = y, nx = x + 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'T') {
+            for (int i = 0; i < 8; i++) {
+                int nr = y + dy[i];
+                int nc = x + dx[i];
+                if (nr<0 || nr>=n || nc<0 || nc>=n || Map[nr][nc] != '0')return false;
+            }
+            return true;
+            
+        }
+    }
+    else if (dir == 1) {//세로일때
+        if (mode == 'U') {
+            if (y - 2 < 0)return false;
+            if (Map[y - 2][x] != '1') {
+                ny = y - 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'D') {
+            if (y + 2 > n-1)return false;
+            if (Map[y + 2][x] != '1') {
+                ny = y + 1, nx = x;
+                return true;
+                
+            }
+        }
+        else if (mode == 'L') {
+            if (x - 1 < 0)return false;
+            if (Map[y - 1][x - 1] != '1' && Map[y][x - 1] != '1' && Map[y + 1][x - 1] != '1') {
+                ny = y, nx = x - 1;
+                return true;
+                
+            }
+        }
+        else if (mode == 'R') {
+            if (x + 1 > n - 1)return false;
+            if (Map[y - 1][x + 1] != '1' && Map[y][x + 1] != '1' && Map[y + 1][x + 1] != '1') {
+                ny = y, nx = x + 1;
+                return true;
+                
+            }
+        }
+        
+        else if (mode == 'T') {
+            for (int i = 0; i < 8; i++) {
+                int nr = y + dy[i];
+                int nc = x + dx[i];
+                if (nr<0 || nr>=n || nc<0 || nc>=n || Map[nr][nc] == '1')return false;
+            }
+            return true;
+           
+        }
+    }
+    return false;
+}
+
+void bfs() {
+    info temp;
+    if (B[0].first - B[2].first == 0) {//y축이 가로라는 말
+        temp.dir = 0;//가로는 0으로 표시
+    }
+    else {//y축이 다르면 세로라는 말
+        temp.dir = 1;//세로는 1로 표시
+    }
+    temp.y = B[1].first, temp.x = B[1].second;
+    queue<info> q;
+    q.push(temp);
+    int round = 0;
+    while (!q.empty()) {
+
+        int size = q.size();
+        for (int i = 0; i < size; i++) {
+            int y = q.front().y,
+                x = q.front().x,
+                dir = q.front().dir;
+            q.pop();
+            visited[y][x][dir] = true;
+            if (check(y, x, dir)) {
+                answer = round;
+                return;
+            }
+
+            if (move(y, x, dir, 'U')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+                cout << "in U" << '\n';
+            }
+            if (move(y, x, dir, 'D')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+                cout << "in D" << '\n';
+            }
+            if (move(y, x, dir, 'L')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+                cout << "in L" << '\n';
+            }
+            if (move(y, x, dir, 'R')) {
+                if (visited[ny][nx][dir] == false) {
+                    visited[ny][nx][dir] = true;
+                    q.push({ ny,nx,dir });
+                }
+                cout << "in R" << '\n';
+            }
+            if (move(y, x, dir, 'T')) {
+                if (dir == 0) {
+                    if (visited[y][x][1] == false) {
+                        visited[y][x][1] = true;
+                        q.push({ y,x,1 });
+                    }
+                }
+                else if (dir == 1) {
+                    if (visited[y][x][0] == false) {
+                        visited[y][x][0] = true;
+                        q.push({ y,x,0 });
+                    }
+                }
+                
+                cout << "in T" << '\n';
+            }
+        }
+        cout << "현재 라운드끝 " << ' ' << round << endl;
+
+        cout << "가로 " << endl;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cout << visited[i][j][0] << ' ';
+            }cout << endl;
+        }
+        cout << "세로 " << endl;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cout << visited[i][j][1] << ' ';
+            }cout << endl;
+        }
+        round++;
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> Map[i][j];
+            if (Map[i][j] == 'B') {
+                B.push_back({ i,j });
+                Map[i][j] = '0';
+            }
+            if (Map[i][j] == 'E') {
+                E.push_back({ i,j });
+                Map[i][j] = '0';
+            }
+        }
+    }
+    if (E[0].first - E[2].first == 0) {
+        Ecenter.dir = 0;
+    }
+    else {
+        Ecenter.dir = 1;
+    }
+    Ecenter.y = E[1].first, Ecenter.x = E[1].second;
+    bfs();
+    
+    cout << answer;
+    return 0;
+}
+이건 디버깅 하기 편하도록 올려둔다.
