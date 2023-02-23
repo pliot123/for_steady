@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int [] dp;
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+        int [] numbers = new int[N];
+        dp = new int[N];
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i =0; i<N; i++){
+            numbers[i] = Integer.parseInt(st.nextToken());
+            dp[i]=Integer.MAX_VALUE;
+        }
+
+        int start=0;
+        int end=0;
+
+        for(int i =0; i<N; i++){
+            int place=BinarySearch(start,end,numbers[i]);
+            if(place==-1){
+                dp[++end]=numbers[i];
+            }else{
+                dp[place]=numbers[i];
+            }
+        }
+        System.out.println(end+1);
+
+    }
+
+    private static int BinarySearch(int start, int end, int value) {
+        int res =-1;
+        //있냐 없냐를 찾는게 아니라 더 작은 곳을 찾는거다
+
+        while(start<=end){
+            int mid = (start+end)/2;
+
+            if(value<=dp[mid]){
+                res=mid;
+                end=mid-1;
+            }
+            else{
+                start= mid+1;
+            }
+        }
+        return res;
+    }
+
+
+}
